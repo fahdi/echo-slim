@@ -15,13 +15,24 @@ return function (App $app) {
     });
 
     $app->get('/', function (Request $request, Response $response) {
-        $response->getBody()->write('Hello world!');
+        $response->getBody()->write('Use /echo/');
         return $response;
     });
 
 	$app->post('/echo', function (Request $request, Response $response) {
 		$response = $response->withHeader('Content-type', 'application/json');
-		$response->getBody()->write(json_encode($_POST));
+		$json = file_get_contents('php://input');
+
+		$response->getBody()->write($json);
+
+		$myfile = fopen( "../logs/log.txt", "a" ) or die( "Unable to open file!" );
+
+		$txt = "Data received from the post:\n";
+		fwrite($myfile, $txt);
+		$txt = var_dump($_POST). "\n\n-----------------------\n\n";
+		fwrite($myfile, $txt);
+		fclose($myfile);
+
 		return $response;
 	});
 
