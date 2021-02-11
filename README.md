@@ -1,6 +1,6 @@
 # Echo App
 
-# How to
+### How to
 
 1. Download the repo zip or clone it.
 2. Install composer packages in root `composer install`
