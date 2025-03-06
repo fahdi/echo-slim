@@ -1,0 +1,4 @@
+[Thu Mar  6 21:51:18 2025] PHP 8.4.4 Development Server (http://localhost:9087) started
+[Thu Mar  6 21:51:21 2025] 127.0.0.1:64454 Accepted
+[Thu Mar  6 21:51:21 2025] 127.0.0.1:64454 [200]: GET /
+[Thu Mar  6 21:51:21 2025] 127.0.0.1:64454 Closing
