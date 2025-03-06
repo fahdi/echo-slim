@@ -22,7 +22,7 @@
         }
     ],
     "require": {
-        "php": "^7.2",
+        "php": "^7.2 || ^8.0",
         "ext-json": "*",
         "monolog/monolog": "^2.1",
         "php-di/php-di": "^6.3",
@@ -30,14 +30,17 @@
         "slim/slim": "^4.7"
     },
     "require-dev": {
-        "jangregor/phpstan-prophecy": "^0.8.1",
+        "jangregor/phpstan-prophecy": "^1.0",
         "phpstan/extension-installer": "^1.0.5",
-        "phpstan/phpstan": "^0.12.58",
-        "phpunit/phpunit": "^8.5"
+        "phpstan/phpstan": "^1.0",
+        "phpunit/phpunit": "^9.5"
     },
     "config": {
         "process-timeout": 0,
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        }
     },
     "autoload": {
         "psr-4": {
