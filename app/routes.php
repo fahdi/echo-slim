@@ -15,33 +15,46 @@ return function (App $app) {
     });
 
     $app->get('/', function (Request $request, Response $response) {
-        $response->getBody()->write('Use /echo/');
+        $response->getBody()->write('Use POST /echo with JSON data');
         return $response;
     });
 
 	$app->post('/echo', function (Request $request, Response $response) {
-		$response = $response->withHeader('Content-type', 'application/json');
-		$json = file_get_contents('php://input');
+		try {
+			$response = $response->withHeader('Content-type', 'application/json');
+			$json = file_get_contents('php://input');
+			
+			if (empty($json)) {
+				throw new Exception('No data received');
+			}
 
-		$response->getBody()->write($json);
+			$response->getBody()->write($json);
 
-		// Save the raw JSON to a file
-		$timestamp = date('Y-m-d_H-i-s');
-		$filename = "../logs/echo_data_{$timestamp}.json";
-		file_put_contents($filename, $json);
+			// Ensure logs directory exists
+			if (!file_exists('../logs')) {
+				mkdir('../logs', 0777, true);
+			}
 
-		// Also update the log file as before
-		$myfile = fopen( "../logs/log.txt", "a" ) or die( "Unable to open file!" );
+			// Save the raw JSON to a file
+			$timestamp = date('Y-m-d_H-i-s');
+			$filename = "../logs/echo_data_{$timestamp}.json";
+			file_put_contents($filename, $json);
 
-		$txt = "Data received from the post:\n";
-		fwrite($myfile, $txt);
-		$txt = "Saved to file: {$filename}\n";
-		fwrite($myfile, $txt);
-		$txt = var_dump($_POST). "\n\n-----------------------\n\n";
-		fwrite($myfile, $txt);
-		fclose($myfile);
+			// Also update the log file
+			$myfile = fopen("../logs/log.txt", "a") or die("Unable to open file!");
+			$txt = "Data received from the post:\n";
+			fwrite($myfile, $txt);
+			$txt = "Saved to file: {$filename}\n";
+			fwrite($myfile, $txt);
+			$txt = print_r($_POST, true) . "\n\n-----------------------\n\n";
+			fwrite($myfile, $txt);
+			fclose($myfile);
 
-		return $response;
+			return $response;
+		} catch (Exception $e) {
+			$response->getBody()->write(json_encode(['error' => $e->getMessage()]));
+			return $response->withStatus(400);
+		}
 	});
 
     $app->group('/users', function (Group $group) {
